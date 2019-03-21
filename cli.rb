@@ -3,6 +3,8 @@ require 'yaml'
 class Sensitive
   attr_reader :config
 
+  REDACTED = '[redacted]'.freeze
+
   def initialize
     @config = YAML::load_file(File.join(__dir__, 'rules.yml'))
   end
@@ -14,7 +16,7 @@ class Sensitive
   def remove_sensitive_data str
     rules.each do |rule|
       regex = Regexp.new(rule.values.first)
-      str = str&.gsub(regex, '[redacted]')
+      str = str&.gsub(regex, REDACTED)
     end
     str
   end
